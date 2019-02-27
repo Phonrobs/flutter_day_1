@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:test_app1/models/menu.dart';
@@ -16,7 +19,7 @@ class OrderPage extends StatefulWidget {
 class OrderPageState extends State<OrderPage> {
   var foodNameController = TextEditingController();
   var formKey = GlobalKey<FormState>();
-  var menuIndex = -1;
+  Menu selectedMenu = null;
 
   Future<List<Menu>> getMenus() async {
     String url = 'http://app.up.ac.th/uappservices/api/menus';
@@ -25,7 +28,10 @@ class OrderPageState extends State<OrderPage> {
 
     print(response.body);
 
-    return [];
+    var jsonDecoded = json.decode(response.body);
+    var menus = jsonDecoded.map<Menu>((json) => Menu.fromJson(json)).toList();
+
+    return menus;
   }
 
   void showMenu(BuildContext context) {
@@ -34,11 +40,34 @@ class OrderPageState extends State<OrderPage> {
         builder: (context) {
           return FutureBuilder(
             future: getMenus(),
-            builder: (context, snapshot) {
+            builder: (context, AsyncSnapshot<List<Menu>> snapshot) {
               if (snapshot.hasData) {
-                return Text('OK');
-              } 
-              else {
+                return GridView.count(
+                  padding: EdgeInsets.only(top: 20.0),
+                  crossAxisCount: 2,
+                  children: snapshot.data.map<Widget>((item) {
+                    return GestureDetector(
+                      child: Column(
+                        children: [
+                          Image.network(
+                            item.imageUrl,
+                            height: 100.0,
+                          ),
+                          Text(item.name),
+                          Text('ราคา ' + item.price.toString() + ' บาท')
+                        ],
+                      ),
+                      onTap: () {
+                        setState(() {
+                          selectedMenu = item;
+                        });
+
+                        Navigator.pop(context);
+                      },
+                    );
+                  }).toList(),
+                );
+              } else {
                 return Center(
                   child: CircularProgressIndicator(),
                 );
@@ -49,7 +78,7 @@ class OrderPageState extends State<OrderPage> {
   }
 
   Widget buildMenuButton(BuildContext context) {
-    if (menuIndex == -1) {
+    if (selectedMenu == null) {
       return Padding(
           padding: EdgeInsets.all(20.0),
           child: OutlineButton(
@@ -57,7 +86,16 @@ class OrderPageState extends State<OrderPage> {
             onPressed: () => showMenu(context),
           ));
     } else {
-      return Container();
+      return Padding(
+        padding: EdgeInsets.all(20.0),
+        child: Row(
+          children: [
+            Image.network(selectedMenu.imageUrl, height: 100.0),
+            Text(selectedMenu.name),
+            Text(selectedMenu.price.toString() + ' บาท')
+          ],
+        ),
+      );
     }
   }
 
