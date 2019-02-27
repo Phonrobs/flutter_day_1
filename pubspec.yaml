@@ -20,10 +20,11 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.2
 
+  http: ^0.12.0+1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
-
 
 # For information on the generic Dart part of this file, see the
 # following page: https://www.dartlang.org/tools/pub/pubspec
@@ -46,6 +47,7 @@ flutter:
     - assets/images/cat4.jpg
     - assets/images/cat5.jpg
     - assets/images/cat6.jpg
+    - assets/images/drawer_bg.jpg
 
   #  - images/a_dot_ham.jpeg
 

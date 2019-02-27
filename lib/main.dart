@@ -6,13 +6,11 @@ void onSave() {
 }
 
 void main() {
-  runApp(
-    MaterialApp(
-      theme: ThemeData(
-        textTheme: TextTheme(),
-        primaryColor: Colors.blue,
-      ),
-      home: HomePage(),
-    )
-  );
+  runApp(MaterialApp(
+    theme: ThemeData(
+        primarySwatch: Colors.orange,
+        buttonColor: Colors.orange,
+    ),
+    home: HomePage(),
+  ));
 }
