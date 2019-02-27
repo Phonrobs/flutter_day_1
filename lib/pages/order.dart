@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:test_app1/models/menu.dart';
 
 class OrderPage extends StatefulWidget {
   Function addOrder;
@@ -16,12 +18,32 @@ class OrderPageState extends State<OrderPage> {
   var formKey = GlobalKey<FormState>();
   var menuIndex = -1;
 
+  Future<List<Menu>> getMenus() async {
+    String url = 'http://app.up.ac.th/uappservices/api/menus';
+
+    var response = await http.get(url);
+
+    print(response.body);
+
+    return [];
+  }
+
   void showMenu(BuildContext context) {
     showModalBottomSheet(
         context: context,
         builder: (context) {
-          return GridView.count(
-            crossAxisCount: 2,
+          return FutureBuilder(
+            future: getMenus(),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return Text('OK');
+              } 
+              else {
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+            },
           );
         });
   }
