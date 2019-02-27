@@ -17,7 +17,9 @@ class OrderPage extends StatefulWidget {
 }
 
 class OrderPageState extends State<OrderPage> {
-  var foodNameController = TextEditingController();
+  var quantityController = TextEditingController();
+  var telephoneController = TextEditingController();
+
   var formKey = GlobalKey<FormState>();
   Menu selectedMenu = null;
 
@@ -99,6 +101,10 @@ class OrderPageState extends State<OrderPage> {
     }
   }
 
+  Future saveOrder() async {
+    
+  }
+
   Widget buildForm(BuildContext context) {
     return SingleChildScrollView(
       child: Form(
@@ -109,12 +115,26 @@ class OrderPageState extends State<OrderPage> {
             Padding(
               padding: EdgeInsets.all(20.0),
               child: TextFormField(
-                controller: foodNameController,
-                decoration: InputDecoration(labelText: 'ชื่ออาหาร'),
+                controller: quantityController,
+                decoration: InputDecoration(labelText: 'จำนวนที่สั่ง (จาน)'),
                 autofocus: true,
+                keyboardType: TextInputType.number,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'โปรดกรอกชื่ออาหารให้ถูกต้อง';
+                    return 'โปรดกรอกจำนวนให้ถูกต้อง';
+                  }
+                },
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.all(20.0),
+              child: TextFormField(
+                controller: telephoneController,
+                decoration: InputDecoration(labelText: 'หมายเลขโทรศัพท์'),
+                keyboardType: TextInputType.phone,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'โปรดกรอกหมายเลขโทรศัพท์ให้ถูกต้อง';
                   }
                 },
               ),
@@ -127,7 +147,6 @@ class OrderPageState extends State<OrderPage> {
                     child: Text('Save'),
                     onPressed: () {
                       if (formKey.currentState.validate()) {
-                        widget.addOrder(foodNameController.text);
                         Navigator.pop(context);
                       }
                     },
